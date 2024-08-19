@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   free_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/19 19:52:00 by mariaoli         ###   ########.fr       */
+/*   Created: 2024/08/19 19:51:23 by mariaoli          #+#    #+#             */
+/*   Updated: 2024/08/19 19:51:48 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-#define PIPEX_H
+#include "../include/pipex.h"
 
-# include "../libft/libft.h"
-# include <stdio.h> // perror
-# include <string.h> //strerror
-# include <wait.h>
-# include <fcntl.h>
-# include <errno.h>
+void	free_vector(char **vector)
+{
+	int	i;
 
-void	free_vector(char **vector);
-
-#endif
+	i = 0;
+	if (vector != NULL)
+		while (vector[i] != NULL)
+			free(vector[i++]);
+	free(vector);
+}

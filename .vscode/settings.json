@@ -1,7 +1,0 @@
-{
-	"files.associations": {
-		"pipex.h": "c",
-		"wait.h": "c",
-		"fcntl.h": "c"
-	}
-}
