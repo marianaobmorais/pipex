@@ -6,7 +6,7 @@
 #    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/10 17:36:47 by mariaoli          #+#    #+#              #
-#    Updated: 2024/08/10 18:08:35 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/08/19 16:34:21 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,7 @@ SRCS_DIR = ./srcs
 LIBFT = ./libft/libft.a
 LIBFT_DIR =./libft
 
-SRCS = $(SRCS_DIR)/main.c \
-		$(SRCS_DIR)/valid_args.c
+SRCS = $(SRCS_DIR)/main.c
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g

@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 18:51:21 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/15 19:51:21 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/15 19:54:09 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ int	main(void)
 			arr[i] = rand() % 11;
 			i++;
 		}
-		if (write(fd[1], &n, sizeof(int)) < 0)
+		if (write(fd[1], &n, sizeof(int)) < 0) // send n
 			return (3);
-		if (write(fd[1], arr, sizeof(int) * n) < 0)
+		if (write(fd[1], arr, sizeof(int) * n) < 0) // send array
 			return (4);
 		close(fd[1]);
 	}
