@@ -6,13 +6,13 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/23 16:41:07 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/23 19:19:15 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-char	**vector_dup(int argc, char **argv)
+/* char	**vector_dup(int argc, char **argv)
 {
 	char	**res;
 	int		i;
@@ -34,9 +34,9 @@ char	**vector_dup(int argc, char **argv)
 	}
 	res[i] = NULL;
 	return (res);
-}
+} */
 
-t_args	*init(int argc, char **argv)
+/* t_args	*init(int argc, char **argv)
 {
 	t_args	*args;
 
@@ -54,4 +54,4 @@ t_args	*init(int argc, char **argv)
 	if (args->fd_out == -1)
 		return (free(args), free_vector(args->argv), NULL);
 	return (args);
-}
+} */

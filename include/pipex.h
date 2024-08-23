@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/23 18:33:11 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/23 19:29:56 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 
 typedef struct s_args
 {
-	char	argc;
-	char	**argv;
+	char	**args;
+	char	*pathname;
 	int		fd_in;
 	int		fd_out;
 }	t_args;
