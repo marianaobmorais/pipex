@@ -6,35 +6,37 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:44:47 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/20 17:42:51 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/23 18:30:52 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int	main(int ac, char **av , char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	int	fd[2];
-	int	pid1;
-	int	pid2;
+	t_args	*args;
+	pid_t	pid;
+	int		fd[2];
+	int		i;
 
-	if (ac != 5)
+	if (argc < 5) // bonus
 		return (1);
-	if (pipe(fd) == -1)
-		return (1);
-	pid1 = fork();
-	if (pid1 == -1)
-		return (perror("Error during fork"), 1); // What number do I need to return?
-	if (pid1 == 0)
-		first_child(fd, av, envp);
-	pid2 = fork();
-	if (pid2 == -1)
-		return (perror("Error during fork"), 1);
-	if (pid2 == 0)
-		last_child(fd, ac, av, envp);
-	close(fd[0]);
-	close(fd[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
-	return (0);
+	args = init(argc, argv);
+	if (args == NULL)
+		exit(EXIT_FAILURE);
+	i = 2;
+	while (i < argc - 1)
+	{
+		if (pipe(fd) == -1)
+			return (perror("Pipe creation failed"), 1); // What number do I need to return?
+		pid = fork();
+		if (pid == -1)
+			return (perror("Fork creation failed"), 1);
+		if (pid == 0)
+			child_process(args, envp, fd, i);
+		else
+			parent_process(fd, pid);
+		i++;
+	}
+	return (free_vector(args->argv), free(args), 0);
 }

@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 21:27:17 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/20 17:56:43 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/23 19:05:17 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,23 @@ If it is, it checks for the command's existence and returns it if found.
 Otherwise, it searches for the command in the directories specified by the 
 PATH environment variable. */
 
-char	*get_pathname(char *argv, char **envp)
+char	*get_pathname(char *arg, char **envp)
 {
 	char	*pathname;
 	char	*slash_pathname;
 	char	*absolute_pathname;
 	char	**paths;
-	
-	pathname = get_first_word(argv, ' ');
+
+	pathname = get_first_word(arg, ' ');
+	if (pathname == NULL)
+		return (NULL);
 	if (ft_strncmp(pathname, "/", 1) == 0)
 	{
 		if (access(pathname, F_OK) == -1)
 		{
 			perror(pathname);
 			free(pathname);
-			exit(EXIT_FAILURE);
+			return (NULL);
 		}
 		return (pathname);
 	}
@@ -76,7 +78,7 @@ char	*get_pathname(char *argv, char **envp)
 				while (paths[j] != NULL)
 				{
 					absolute_pathname = ft_strjoin(paths[j], slash_pathname);
-					if (access(absolute_pathname, F_OK) == 0)
+					if (access(absolute_pathname, F_OK) == 0 && access(absolute_pathname, X_OK) == 0)
 					{
 						free_vector(paths);
 						free(slash_pathname);
@@ -89,13 +91,13 @@ char	*get_pathname(char *argv, char **envp)
 			}
 			i++;
 		}
-		if (access(pathname, F_OK) == -1) 
+		if (access(pathname, F_OK) == -1 || access(absolute_pathname, X_OK) == -1) 
 		{
 			perror(pathname); // How to do it so it prints correctly? like < infile /usr/bn/ls -l | wc -l > outfile prints zsh: no such file or directory: /usr/bn/ls
 			free_vector(paths);
 			free(slash_pathname);
 			free(pathname);
-			exit(EXIT_FAILURE);
+			return (NULL);
 		}
 	}
 	return (pathname);
