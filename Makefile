@@ -6,7 +6,7 @@
 #    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/10 17:36:47 by mariaoli          #+#    #+#              #
-#    Updated: 2024/08/23 16:40:32 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/08/24 13:09:32 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,10 +19,8 @@ LIBFT_DIR =./libft
 
 SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/free_functions.c \
-		$(SRCS_DIR)/get_pathname.c \
-		$(SRCS_DIR)/get_exec_args.c \
 		$(SRCS_DIR)/processes.c \
-		$(SRCS_DIR)/init.c
+		$(SRCS_DIR)/parse_argv.c
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g

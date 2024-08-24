@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/23 19:29:56 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/24 18:15:24 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,11 @@ typedef struct s_args
 	int		fd_out;
 }	t_args;
 
-t_args	*init(int argc, char **argv);
-char	**vector_dup(int argc, char **argv);
-void	child_process(t_args *args, char **envp, int *fd, int i);
-int		execute(char *argv, char **envp);
-void	parent_process(int *fd, pid_t pid);
+t_args	*parse_argv(int argc, char **argv, char **envp);
+void	free_struct(t_args *args);
 void	free_vector(char **vector);
-char	*get_pathname(char *argv, char **envp);
-char	*get_first_word(char *s, int c);
-char	**get_exec_args(char *argv);
-char	**vector_dup(int argc, char **argv);
+int		execute(t_args *args, char **envp);
+void	child_process(int argc, t_args *args, char **envp, int *fd, int i);
+void	parent_process(int *fd, pid_t pid);
 
 #endif
