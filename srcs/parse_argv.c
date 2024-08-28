@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parse_argv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/26 16:30:58 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/28 12:19:46 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+static void	init_args(t_args *args, int argc)
+{
+	int	count;
+
+	count = 0;
+	while (count <= argc - 3)
+	{
+		args[count].args = NULL;
+		args[count].pathname = NULL;
+		args[count].first_child = false;
+		args[count].last_child = false;
+		count++;
+	}
+}
 
 static char	*get_pathname(char **args, char **envp)
 {
@@ -19,11 +34,10 @@ static char	*get_pathname(char **args, char **envp)
 	char	**paths;
 	int		i;
 
-	//ft_printf("args[0]: %s\n", args[0]); // erase
 	if (!args[0])
-		return (NULL); // permission denied: 
+		return (ft_printf("%s: command not found\n", args[0]), NULL);
 	if (access(args[0], F_OK) == 0 && access(args[0], X_OK) == 0)
-		return (ft_strdup(args[0])); // do I need to allocate mem?
+		return (ft_strdup(args[0]));
 	i = 0;
 	while (envp[i] != NULL && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
@@ -36,76 +50,36 @@ static char	*get_pathname(char **args, char **envp)
 	while (paths[i] != NULL)
 	{
 		path_slash = ft_strjoin(paths[i], "/");
-		ft_printf("path_slash: %s\n", path_slash); // erase this
 		absolute_pathname = ft_strjoin(path_slash, args[0]);
 		free(path_slash);
-		ft_printf("absolute path: %s\n", absolute_pathname); // erase this
 		if (access(absolute_pathname, F_OK) == 0 && access(absolute_pathname, X_OK) == 0)
 			return (free_vector(paths), absolute_pathname);
 		free(absolute_pathname);
 		i++;
 	}
-	ft_printf("path didnt work\n"); // erase this later
+	ft_printf("%s: command not found\n", args[0]);
 	return (free_vector(paths), NULL);
-}
-
-void	init(t_args *args, int argc)
-{
-	int	i;
-
-	i = 0;
-	while (i < argc - 2)
-	{
-		args[i].args = NULL;
-		args[i].pathname = NULL;
-		args[i].fd_in = -1;
-		args[i].fd_out = -1;
-		i++;
-	}
 }
 
 t_args	*parse_argv(int argc, char **argv, char **envp)
 {
 	t_args	*args;
-	int		i;
+	int		count;
 
 	args = (t_args *)malloc(sizeof(t_args) * (argc - 2));
 	if (args == NULL)
-		return (NULL);
-	init(args, argc);
-	i = 0;
-	while (i < argc - 3)
+		exit (1); // check the proper exit number for failed memory allocation
+	init_args(args, argc);
+	count = 0;
+	while (count < argc - 3)
 	{
-		args[i].fd_in = open(argv[1], O_RDONLY);
-		if (args[i].fd_in == -1)
-		{
-			ft_printf("Error: permission denied: %s\n", argv[1]);
-			//free_struct(args);
-			//free(args);
-			//return (free_struct(args), free(args), NULL);
-		}
-		args[i].fd_out = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644); // are the permissions right?
-		if (args[i].fd_out == -1)
-		{
-			ft_printf("Error: permission denied: %s\n", argv[argc - 1]);
-			//free_struct(args);
-			//free(args);
-			//return (free_struct(args), free(args), NULL);
-		}
-		args[i].args = ft_split(argv[i + 2], ' '); // get the args to be passed in the execve
-		//if (args[i].args == NULL)
-		//	free_struct(args);
-		/* return (free_struct(args), NULL) */;
-		args[i].pathname = get_pathname(args[i].args, envp); // check is the first split arg is executable
-		if (args[i].pathname == NULL)
-		{
-			ft_printf("Error: Command not found: %s\n", args[i].args[0]);
-			//free_struct(args); /* return (free_struct(args), NULL); */
-		}
-		i++;
+		args[count].args = ft_split(argv[count + 2], ' ');
+		args[count].pathname = get_pathname(args[count].args, envp);
+		if (count == 0)
+			args[count].first_child = true;
+		if (count == argc - 4)
+			args[count].last_child = true;
+		count++;
 	}
-	args[i].args = NULL;
-	args[i].pathname = NULL;
-	//ft_printf("returning array of t_args\n");
 	return (args);
 }

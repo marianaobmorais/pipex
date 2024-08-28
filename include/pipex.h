@@ -6,7 +6,7 @@
 /*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/28 01:36:55 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/08/28 12:01:35 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@
 
 typedef struct s_open
 {
+	char	*infile;
 	int		fd_in;
 	int		fd_out;
-	char	*infile;
-	//char	*outfile;
 }	t_open;
 
 typedef struct s_args
@@ -45,8 +44,8 @@ typedef struct s_args
 	int		fd_out;
 }	t_args; */
 
-// t_args	*parse_argv(int argc, char **argv, char **envp);
-//void	free_struct(t_args *args);
+t_args	*parse_argv(int argc, char **argv, char **envp);
+void	free_struct(t_args *args);
 void	free_vector(char **vector);
 // int		execute(t_args *args, char **envp);
 // void	child_process(int argc, t_args *args, char **envp, int *fd, int i);

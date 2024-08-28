@@ -6,7 +6,7 @@
 /*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 19:51:23 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/27 17:01:43 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/08/28 11:39:56 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,14 @@
 void	free_struct(t_args *args)
 {
 	int	i;
-	//int	j;
 
 	if (args == NULL)
 		return ;
 	i = 0;
 	while (args[i].args != NULL)
 	{
-		//j = 0;
 		if (args[i].args != NULL)
-		{
 			free_vector(args[i].args);
-			/* while (args[i].args[j] != NULL)
-			{
-				free(args[i].args[j]);
-				j++;
-			}
-			free(args[i].args); */
-		}
 		if (args[i].pathname != NULL)
 			free(args[i]. pathname);
 		i++;

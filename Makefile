@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
+#    By: marianamorais <marianamorais@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/10 17:36:47 by mariaoli          #+#    #+#              #
-#    Updated: 2024/08/26 19:31:48 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/08/28 11:58:17 by marianamora      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,9 @@ LIBFT = ./libft/libft.a
 LIBFT_DIR =./libft
 
 SRCS = $(SRCS_DIR)/main.c \
+		$(SRCS_DIR)/parse_argv.c \
 		$(SRCS_DIR)/free_functions.c \
-		#$(SRCS_DIR)/processes.c \
-		$(SRCS_DIR)/parse_argv.c
+		#$(SRCS_DIR)/processes.c 
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
