@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 19:51:23 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/28 11:39:56 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/08/28 18:46:35 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ void	free_struct(t_args *args)
 	i = 0;
 	while (args[i].args != NULL)
 	{
-		if (args[i].args != NULL)
-			free_vector(args[i].args);
+		free_vector(args[i].args);
 		if (args[i].pathname != NULL)
+		{
 			free(args[i]. pathname);
+			args[i]. pathname = NULL;
+		}
 		i++;
 	}
 	free(args);

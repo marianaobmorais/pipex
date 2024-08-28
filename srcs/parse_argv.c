@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_argv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/28 12:19:46 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/08/28 20:19:35 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,34 @@ static void	init_args(t_args *args, int argc)
 	}
 }
 
-static char	*get_pathname(char **args, char **envp)
+static char	*get_absolute_pathname(char **paths, char *arg)
 {
 	char	*path_slash;
+	char	*absolute_pathname;
+	int		i;
+
+	i = 0;
+	while (paths[i] != NULL)
+	{
+		path_slash = ft_strjoin(paths[i], "/");
+		absolute_pathname = ft_strjoin(path_slash, arg);
+		free(path_slash);
+		if (access(absolute_pathname, F_OK) == 0 && access(absolute_pathname, X_OK) == 0)
+			return (absolute_pathname);
+		free(absolute_pathname);
+		i++;
+	}
+	return (NULL);
+}
+
+static char	*get_pathname(char **args, char **envp)
+{
 	char	*absolute_pathname;
 	char	**paths;
 	int		i;
 
 	if (!args[0])
-		return (ft_printf("%s: command not found\n", args[0]), NULL);
+		return (ft_printf("pipex: permission denied: %s\n", args[0]), NULL);
 	if (access(args[0], F_OK) == 0 && access(args[0], X_OK) == 0)
 		return (ft_strdup(args[0]));
 	i = 0;
@@ -45,20 +64,12 @@ static char	*get_pathname(char **args, char **envp)
 	if (envp[i] != NULL)
 		paths = ft_split(envp[i] + 5, ':');
 	if (paths == NULL)
-		return (NULL);
-	i = 0;
-	while (paths[i] != NULL)
-	{
-		path_slash = ft_strjoin(paths[i], "/");
-		absolute_pathname = ft_strjoin(path_slash, args[0]);
-		free(path_slash);
-		if (access(absolute_pathname, F_OK) == 0 && access(absolute_pathname, X_OK) == 0)
-			return (free_vector(paths), absolute_pathname);
-		free(absolute_pathname);
-		i++;
-	}
-	ft_printf("%s: command not found\n", args[0]);
-	return (free_vector(paths), NULL);
+		return (ft_printf("pipex: memory allocation failed"), NULL);
+	absolute_pathname = get_absolute_pathname(paths, args[0]);
+	free_vector(paths);
+	if (absolute_pathname != NULL)
+		return (absolute_pathname);
+	return (ft_printf("pipex: command not found: %s\n", args[0]), NULL);
 }
 
 t_args	*parse_argv(int argc, char **argv, char **envp)
@@ -73,8 +84,8 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 	count = 0;
 	while (count < argc - 3)
 	{
-		args[count].args = ft_split(argv[count + 2], ' ');
-		args[count].pathname = get_pathname(args[count].args, envp);
+		args[count].args = ft_split(argv[count + 2], ' '); // malloc is protected in the child process
+		args[count].pathname = get_pathname(args[count].args, envp); // malloc is protectes in the child process
 		if (count == 0)
 			args[count].first_child = true;
 		if (count == argc - 4)

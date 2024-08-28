@@ -6,108 +6,74 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/26 19:22:50 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/28 20:26:02 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int	execute(t_args *args, char **envp)
+static void	exit_child(t_args *args, int count, t_open fd)
 {
-	int		err;
-
-	err = execve(args->pathname, args->args, envp);
-	if (err == -1)
-		perror("exevc failed");
-	return (err);
+	if (args[count].args == NULL)
+	{
+		free(fd.infile);
+		exit(1); //number??
+	}
+/* 	if (args[count].first_child == true)
+	{
+		//fd_in = open("/dev/null", O_RDONLY); // já aberto na main
+		dup2(fd.fd_in, STDIN_FILENO); // isso é só pra primeira volta? mas para quê duplicar o fd_in?
+		close(fd.fd_in);
+	} */
+	close(fd.fd[0]);
+	close(fd.fd[1]);
+	free_struct(args);
+	free(fd.infile);
+	exit(126);
 }
 
-void	child_process(int argc, t_args *args, char **envp, int *fd, int i)
+int	execute(char *pathname, char **args, char **envp, t_open fd)
 {
 	int	err;
-	
-	if (i == 2) // first process
-	{
-		dup2(args->fd_in, STDIN_FILENO); // read - instead of reading from the stdin (keyboard/whatever is written on the terminal), it will read from the av[1]
-		close(args->fd_in);
-	}
-	if (i == argc - 2) // last process
-	{
-		dup2(args->fd_out, STDOUT_FILENO); // write - everything that would normally go to stdout (the terminal) now goes into the write end of the pipe (fd[1]).
-		close(args->fd_out);
-	}
-	else // middle processes
-		dup2(fd[1], STDOUT_FILENO); // everything that would normally go to stdout (the terminal) now goes into the write end of the pipe (fd[1]).
-	close(fd[0]);
-	close(fd[1]);
-	err = execute(args, envp); // execve should write to the stdout - it inherits from the parent
-	if (err == -1)
-	{
-		free_struct(args);
-		exit(EXIT_FAILURE);
-	}
-}
 
-void	parent_process(int *fd, pid_t pid)
-{
-	close(fd[1]);
-	dup2(fd[0], STDIN_FILENO); // everything that would normally come from stdin (the keyboard) now comes from the read end of the pipe (fd[0]).
-	// Redirect stdout to the read end of the pipe
-	close(fd[0]);
-	waitpid(pid, NULL, 0);
-}
-
-/* int	execute(char *arg, char **envp)
-{
-	int		err;
-	char	*pathname;
-	char	**args;
-	
 	err = -1;
-	pathname = get_pathname(arg, envp);
-	if (pathname == NULL)
-		return (err);
-	args = get_exec_args(arg);
-	if (args == NULL)
-		return (err); // malloc failed
+	close(fd.fd[0]);
+	close(fd.fd[1]);
 	err = execve(pathname, args, envp);
 	if (err == -1)
-		perror("exevc failed");
+		perror("execve");
 	return (err);
 }
 
-void	child_process(t_args *args, char **envp, int *fd, int i)
+void	child_process(t_args *args, int count, char **envp, t_open fd)
 {
-	int	err;
-	
-	if (i == 2) // first process
+	if (args[count].args == NULL || args[count].pathname == NULL)
+		exit_child(args, count, fd);
+	if (args[count].first_child == true) // first process
 	{
-		dup2(args->fd_in, STDIN_FILENO); // read - instead of reading from the stdin (keyboard/whatever is written on the terminal), it will read from the av[1]
-		close(args->fd_in);
+		if (access(fd.infile, F_OK) == -1 || access(fd.infile, R_OK) == -1) // if infile doesnt exist or it's not readable
+			exit_child(args, count, fd);
+		else
+		{
+			dup2(fd.fd_in, STDIN_FILENO); // read - instead of reading from the stdin (keyboard/whatever is written on the terminal), it will read from the av[1]
+			close(fd.fd_in);
+		}
 	}
-	if (i == args->argc - 2) // last process
+	if (args[count].last_child == true) // last process
 	{
-		dup2(args->fd_out, STDOUT_FILENO); // write - everything that would normally go to stdout (the terminal) now goes into the write end of the pipe (fd[1]).
-		close(args->fd_out);
+		dup2(fd.fd_out, STDOUT_FILENO); // write - everything that would normally go to stdout (the terminal) now goes into the write end of the pipe (fd[1]).
+		close(fd.fd_out);
 	}
 	else // middle processes
-		dup2(fd[1], STDOUT_FILENO); // everything that would normally go to stdout (the terminal) now goes into the write end of the pipe (fd[1]).
-	close(fd[0]);
-	close(fd[1]);
-	err = execute(args->argv[i], envp); // execve should write to the stdout - it inherits from the parent
-	if (err == -1)
-	{
-		free_vector(args->argv);
-		free(args);
-		exit(EXIT_FAILURE);
-	}
+		dup2(fd.fd[1], STDOUT_FILENO); // everything that would normally go to stdout (the terminal) now goes into the write end of the pipe (fd[1]).
+	if (execute(args[count].pathname, args[count].args, envp, fd) == -1)
+		exit_child(args, count, fd);
 }
 
-void	parent_process(int *fd, pid_t pid)
+void	parent_process(int *fd)
 {
-	close(fd[1]);
 	dup2(fd[0], STDIN_FILENO); // everything that would normally come from stdin (the keyboard) now comes from the read end of the pipe (fd[0]).
 	// Redirect stdout to the read end of the pipe
 	close(fd[0]);
-	waitpid(pid, NULL, 0);
-} */
+	close(fd[1]);
+}
