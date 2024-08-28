@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/26 19:31:26 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/28 01:36:55 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,34 @@
 # include "../libft/libft.h"
 # include <stdio.h> // perror
 # include <string.h> //strerror
-# include <wait.h>
+//# include <wait.h>
 # include <fcntl.h>
-# include <errno.h>
+# include <errno.h> // do I need this one?
+# include <stdbool.h>
+
+typedef struct s_open
+{
+	int		fd_in;
+	int		fd_out;
+	char	*infile;
+	//char	*outfile;
+}	t_open;
 
 typedef struct s_args
 {
 	char	**args;
 	char	*pathname;
+	bool	first_child;
+	bool	last_child;
+}	t_args;
+
+/* typedef struct s_args
+{
+	char	**args;
+	char	*pathname;
 	int		fd_in;
 	int		fd_out;
-}	t_args;
+}	t_args; */
 
 // t_args	*parse_argv(int argc, char **argv, char **envp);
 //void	free_struct(t_args *args);
