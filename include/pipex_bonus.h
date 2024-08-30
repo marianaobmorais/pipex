@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/30 18:30:54 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/30 18:25:20 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # include "../libft/libft.h"
 # include <stdio.h>
@@ -22,7 +22,7 @@
 # define PERR_PIPE "Error: pipe creation failed"
 # define PERR_FORK "Error: fork creation failed"
 # define PERR_EXECVE "Error: execve"
-# define ERR_ARGS "Error: required usage: ./pipex file1 cmd1 cmd2 file2\n"
+# define ERR_ARGS_BONUS "Error: not enough arguments\n"
 # define ERR_PERMISSION "Error: permission denied: %s\n"
 # define ERR_MALLOC "Error: memory allocation failed: %s\n"
 # define ERR_COMMAND "Error: command not found: %s\n"

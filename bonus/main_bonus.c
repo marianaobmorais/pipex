@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:44:47 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/30 18:31:06 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/30 18:26:59 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex.h"
+#include "../include/pipex_bonus.h"
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -19,8 +19,8 @@ int	main(int argc, char **argv, char **envp)
 	int		fd[2];
 	int		i;
 
-	if (argc != 5)
-		return (ft_printf(ERR_ARGS), 2);
+	if (argc < 5)
+		return (ft_printf(ERR_ARGS_BONUS), 2);
 	args = parse_argv(argc, argv, envp);
 	i = 2;
 	while (i < argc - 1)

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   processes.c                                        :+:      :+:    :+:   */
+/*   processes_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/30 19:52:19 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/30 20:11:19 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex.h"
+#include "../include/pipex_bonus.h"
 
 static void	exit_child(t_args *args, int *fd, int argc)
 {
@@ -48,7 +48,7 @@ static int	open_file(char *file, bool infile)
 	}
 	else
 	{
-		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644); // heredoc = append
 		if (fd == -1)
 			return (ft_printf(ERR_PERMISSION, file), fd);
 	}
@@ -78,6 +78,8 @@ void	child_process(t_args *args, int count, char **envp, int *fd)
 		dup2(fd_io, STDOUT_FILENO);
 		close(fd_io);
 	}
+	else
+		dup2(fd[1], STDOUT_FILENO);
 	if (execute(args[count].pathname, args[count].args, envp, fd) == -1)
 		exit_child(args, fd, args[count].argc);
 }
