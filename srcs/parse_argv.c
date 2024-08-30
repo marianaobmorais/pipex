@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_argv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/28 20:19:35 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/08/30 12:23:21 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ static void	init_args(t_args *args, int argc)
 		args[count].pathname = NULL;
 		args[count].first_child = false;
 		args[count].last_child = false;
+		args[count].infile = NULL;
+		args[count].outfile = NULL;
 		count++;
 	}
 }
 
-static char	*get_absolute_pathname(char **paths, char *arg)
+static char	*iterate_path(char **paths, char *arg)
 {
 	char	*path_slash;
 	char	*absolute_pathname;
@@ -53,8 +55,10 @@ static char	*get_pathname(char **args, char **envp)
 	char	**paths;
 	int		i;
 
-	if (!args[0])
-		return (ft_printf("pipex: permission denied: %s\n", args[0]), NULL);
+	/* if (args == NULL)
+		return (ft_printf(ERR_MALLOC, "ft_split in parse_argv"), NULL); */
+	if (args[0] == NULL)
+		return (ft_printf(ERR_PERMISSION, args[0]), NULL); 
 	if (access(args[0], F_OK) == 0 && access(args[0], X_OK) == 0)
 		return (ft_strdup(args[0]));
 	i = 0;
@@ -64,12 +68,20 @@ static char	*get_pathname(char **args, char **envp)
 	if (envp[i] != NULL)
 		paths = ft_split(envp[i] + 5, ':');
 	if (paths == NULL)
-		return (ft_printf("pipex: memory allocation failed"), NULL);
-	absolute_pathname = get_absolute_pathname(paths, args[0]);
+		return (ft_printf(ERR_MALLOC, "ft_split in get_pathname"), NULL);
+	absolute_pathname = iterate_path(paths, args[0]);
 	free_vector(paths);
 	if (absolute_pathname != NULL)
 		return (absolute_pathname);
-	return (ft_printf("pipex: command not found: %s\n", args[0]), NULL);
+	return (ft_printf(ERR_COMMAND, args[0]), NULL);
+}
+
+void	exit_parse(t_args *args)
+{
+	ft_printf(ERR_MALLOC, "parse_argv");
+	if (args != NULL)
+		free_struct(args);
+	exit(1); // check the proper exit number for failed memory allocation
 }
 
 t_args	*parse_argv(int argc, char **argv, char **envp)
@@ -77,19 +89,23 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 	t_args	*args;
 	int		count;
 
-	args = (t_args *)malloc(sizeof(t_args) * (argc - 2));
+	args = (t_args *)malloc(sizeof(t_args) * (argc - 2)); // do I need to allocate space for NULL?
 	if (args == NULL)
-		exit (1); // check the proper exit number for failed memory allocation
+		exit_parse(args);
 	init_args(args, argc);
 	count = 0;
 	while (count < argc - 3)
 	{
-		args[count].args = ft_split(argv[count + 2], ' '); // malloc is protected in the child process
-		args[count].pathname = get_pathname(args[count].args, envp); // malloc is protectes in the child process
+		args[count].args = NULL; //ft_split(argv[count + 2], ' ');
+		if (args[count].args == NULL) //the exit should be done in the child process? if I exit here, the outfile won't be created
+			exit_parse(args);
+		args[count].pathname = get_pathname(args[count].args, envp);
 		if (count == 0)
 			args[count].first_child = true;
 		if (count == argc - 4)
 			args[count].last_child = true;
+		args[count].infile = ft_strdup(argv[1]);
+		args[count].outfile = ft_strdup(argv[argc - 1]);
 		count++;
 	}
 	return (args);
