@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
+#    By: marianamorais <marianamorais@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/10 17:36:47 by mariaoli          #+#    #+#              #
-#    Updated: 2024/08/30 19:37:01 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/09/02 13:39:26 by marianamora      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,12 +37,13 @@ RM = rm -f
 $(NAME): $(LIBFT) $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)
 
-all: $(NAME) bonus
-
 bonus: $(BONUS_NAME)
 
 $(BONUS_NAME): $(LIBFT) $(BONUS_SRCS)
 	$(CC) $(CFLAGS) $(BONUS_SRCS) $(LIBFT) -o $(BONUS_NAME)
+	mv $(BONUS_NAME) pipex
+
+all: $(NAME) bonus
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
@@ -57,4 +58,4 @@ fclean:
 re: fclean
 	$(MAKE) all
 
-.PHONY: all clean fclean re #bonus
+.PHONY: all clean fclean re bonus

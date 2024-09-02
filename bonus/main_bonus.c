@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:44:47 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/30 18:26:59 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/01 16:59:11 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc < 5)
 		return (ft_printf(ERR_ARGS_BONUS), 2);
 	args = parse_argv(argc, argv, envp);
-	i = 2;
+	i = 2 + is_heredoc(argv[1]);
 	while (i < argc - 1)
 	{
 		if (pipe(fd) == -1)
@@ -31,9 +31,9 @@ int	main(int argc, char **argv, char **envp)
 		if (pid == -1)
 			return (perror(PERR_FORK), 1);
 		if (pid == 0)
-			child_process(args, i - 2, envp, fd);
+			child_process(args, i - 2 - is_heredoc(argv[1]), envp, fd);
 		else
-			parent_process(fd);
+			parent_process(fd, pid, is_heredoc(argv[1]));
 		i++;
 	}
 	if (pid != 0)

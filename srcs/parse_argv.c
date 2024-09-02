@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_argv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/08/30 19:54:02 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/01 00:31:45 by marianamora      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,15 +93,15 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 	count = 0;
 	while (count < argc - 3)
 	{
+		args[count].infile = argv[1]; //ft_strdup(argv[1]);
+		args[count].outfile = argv[argc - 1]; //ft_strdup(argv[argc - 1]);
+		args[count].argc = argc;
 		args[count].args = ft_split(argv[count + 2], ' ');
 		args[count].pathname = get_pathname(args[count].args, envp);
 		if (count == 0)
 			args[count].first_child = true;
 		if (count == argc - 4)
 			args[count].last_child = true;
-		args[count].infile = ft_strdup(argv[1]);
-		args[count].outfile = ft_strdup(argv[argc - 1]);
-		args[count].argc = argc;
 		count++;
 	}
 	return (args);
