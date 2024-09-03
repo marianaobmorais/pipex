@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   parse_argv_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/01 16:58:40 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/09/03 19:50:28 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex_bonus.h"
 
-static void	init_args(t_args *args, int argc, int hd_offset)
+static void	init_args(t_args *args, int argc, bool is_heredoc)
 {
 	int	count;
 
 	count = 0;
-	while (count <= argc - 3 - hd_offset)
+	while (count <= argc - 3 - is_heredoc)
 	{
 		args[count].infile = NULL;
 		args[count].outfile = NULL;
@@ -27,7 +27,7 @@ static void	init_args(t_args *args, int argc, int hd_offset)
 		args[count].pathname = NULL;
 		args[count].first_child = false;
 		args[count].last_child = false;
-		args[count].heredoc = hd_offset; //false;
+		args[count].heredoc = is_heredoc;
 		count++;
 	}
 }
@@ -72,7 +72,7 @@ static char	*get_pathname(char **args, char **envp)
 	if (envp[i] != NULL)
 		paths = ft_split(envp[i] + 5, ':');
 	if (paths == NULL)
-		return (ft_printf(ERR_MALLOC, "ft_split in get_pathname"), NULL);
+		return (ft_printf(ERR_COMMAND, args[0]), NULL);
 	absolute_pathname = iterate_env_path(paths, args[0]);
 	free_vector(paths);
 	if (absolute_pathname != NULL)
@@ -80,18 +80,10 @@ static char	*get_pathname(char **args, char **envp)
 	return (ft_printf(ERR_COMMAND, args[0]), NULL);
 }
 
-/* int	heredoc_offset(char *argv)
+static void	error_malloc(void)
 {
-	if (ft_strncmp(argv, "here_doc", 8) == 0)
-		return (1);
-	return (0);
-} */
-
-bool	is_heredoc(char *argv)
-{
-	if (ft_strncmp(argv, "here_doc", 8) == 0)
-		return (true);
-	return (false);
+	ft_printf(ERR_MALLOC, "parse_argv");
+	exit(EXIT_FAILURE);
 }
 
 t_args	*parse_argv(int argc, char **argv, char **envp)
@@ -101,12 +93,12 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 
 	args = (t_args *)malloc(sizeof(t_args) * (argc - 2));
 	if (args == NULL)
-		exit(EXIT_FAILURE); //ft_printf(ERR_MALLOC, "parse_argv");
+		error_malloc();
 	init_args(args, argc, is_heredoc(argv[1]));
 	count = 0;
 	while (count < argc - 3 - is_heredoc(argv[1]))
 	{
-		args[count].infile = argv[1]; // or here_doc
+		args[count].infile = argv[1];
 		args[count].outfile = argv[argc - 1];
 		args[count].argc = argc;
 		args[count].limiter = argv[2];
@@ -116,38 +108,7 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 			args[count].first_child = true;
 		if (count == argc - 4 - is_heredoc(argv[1]))
 			args[count].last_child = true;
-		//args[count].heredoc = is_heredoc(argv[1]);
 		count++;
 	}
 	return (args);
 }
-
-
-/* t_args	*parse_argv(int argc, char **argv, char **envp)
-{
-	t_args	*args;
-	int		count;
-
-	args = (t_args *)malloc(sizeof(t_args) * (argc - 2));
-	if (args == NULL)
-	{
-		ft_printf(ERR_MALLOC, "parse_argv");
-		exit(EXIT_FAILURE);
-	}
-	init_args(args, argc);
-	count = 0;
-	while (count < argc - 3)
-	{
-		args[count].infile = argv[1]; //ft_strdup(argv[1]);
-		args[count].outfile = argc - 1; //ft_strdup(argv[argc - 1]);
-		args[count].argc = argc;
-		args[count].args = ft_split(argv[count + 2], ' ');
-		args[count].pathname = get_pathname(args[count].args, envp);
-		if (count == 0)
-			args[count].first_child = true;
-		if (count == argc - 4)
-			args[count].last_child = true;
-		count++;
-	}
-	return (args);
-} */

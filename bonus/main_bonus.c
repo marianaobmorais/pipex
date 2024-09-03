@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:44:47 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/01 16:59:11 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/09/03 19:22:53 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,5 @@ int	main(int argc, char **argv, char **envp)
 	}
 	if (pid != 0)
 		wait(NULL);
-	return (free_struct(args, argc), 0);
+	return (free_struct(args), 0);
 }

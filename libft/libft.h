@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 19:56:34 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/07/24 18:28:53 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:41:50 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define LIBFT_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 1024
 # endif
 
 # ifndef OPENFD_MAX

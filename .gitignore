@@ -1,5 +1,7 @@
 *.o
 *.a
 pipex
+pipex_bonus
 infile
 outfile
+out

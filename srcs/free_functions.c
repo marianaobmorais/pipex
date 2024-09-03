@@ -3,32 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   free_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 19:51:23 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/01 00:32:10 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/09/03 18:21:18 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	free_struct(t_args *args, int argc)
+void	free_struct(t_args *args)
 {
 	int	i;
 
 	if (args == NULL)
 		return ;
 	i = 0;
-	while (i <= argc - 3)
+	while (i <= args[0].argc - 3)
 	{
 		if (args[i].args != NULL)
 			free_vector(args[i].args);
 		if (args[i].pathname != NULL)
 			free(args[i].pathname);
-		// if (args[i].infile != NULL)
-		// 	free(args[i].infile);
-		// if (args[i].outfile != NULL)
-		// 	free(args[i].outfile);
 		i++;
 	}
 	free(args);

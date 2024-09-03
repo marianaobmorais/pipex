@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_argv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianamorais <marianamorais@student.42    +#+  +:+       +#+        */
+/*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/01 00:31:45 by marianamora      ###   ########.fr       */
+/*   Updated: 2024/09/03 19:02:26 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static char	*get_pathname(char **args, char **envp)
 	if (envp[i] != NULL)
 		paths = ft_split(envp[i] + 5, ':');
 	if (paths == NULL)
-		return (ft_printf(ERR_MALLOC, "ft_split in get_pathname"), NULL);
+		return (ft_printf(ERR_COMMAND, args[0]), NULL);
 	absolute_pathname = iterate_env_path(paths, args[0]);
 	free_vector(paths);
 	if (absolute_pathname != NULL)
@@ -93,8 +93,8 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 	count = 0;
 	while (count < argc - 3)
 	{
-		args[count].infile = argv[1]; //ft_strdup(argv[1]);
-		args[count].outfile = argv[argc - 1]; //ft_strdup(argv[argc - 1]);
+		args[count].infile = argv[1];
+		args[count].outfile = argv[argc - 1];
 		args[count].argc = argc;
 		args[count].args = ft_split(argv[count + 2], ' ');
 		args[count].pathname = get_pathname(args[count].args, envp);

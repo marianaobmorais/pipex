@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marianamorais <marianamorais@student.42    +#+  +:+       +#+         #
+#    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/10 17:36:47 by mariaoli          #+#    #+#              #
-#    Updated: 2024/09/02 13:39:26 by marianamora      ###   ########.fr        #
+#    Updated: 2024/09/03 18:09:07 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ SRCS = $(SRCS_DIR)/main.c \
 BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/parse_argv_bonus.c \
 		$(BONUS_DIR)/free_functions_bonus.c \
-		$(BONUS_DIR)/processes_bonus.c
+		$(BONUS_DIR)/processes_bonus.c \
+		$(BONUS_DIR)/heredoc_utils.c
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
@@ -41,7 +42,6 @@ bonus: $(BONUS_NAME)
 
 $(BONUS_NAME): $(LIBFT) $(BONUS_SRCS)
 	$(CC) $(CFLAGS) $(BONUS_SRCS) $(LIBFT) -o $(BONUS_NAME)
-	mv $(BONUS_NAME) pipex
 
 all: $(NAME) bonus
 
