@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 18:07:31 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/03 19:52:44 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:07:00 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,46 @@
 
 static int	read_heredoc(char *limiter)
 {
+	int		fd[2];
+	pid_t	pid_hd;
+	char	*input;
+	char	*limiter_nl;
+
+	pipe(fd);
+	pid_hd = fork();
+	if (pid_hd == 0)
+	{
+		input = (char *)malloc(sizeof(char));
+		*input = '\0';
+		while (input != NULL)
+		{
+			ft_printf("pipe heredoc> ");
+			input = get_next_line(STDIN_FILENO);
+			limiter_nl = ft_strjoin(limiter, "\n");
+			if (ft_strncmp(limiter_nl, input, ft_strlen(input)) == 0)
+			{
+				free(limiter_nl);
+				free(input);
+				exit (EXIT_SUCCESS);
+			}
+			free(limiter_nl);
+			if (write(fd[1], input, ft_strlen(input)) == -1)
+				return (free(input), -1);
+			free(input);
+		}
+	}
+	return (fd[0]);
+}
+
+
+/* static int	read_heredoc(char *limiter)
+{
 	int		fd_write;
 	int		fd_read;
 	char	*input;
 	char	*limiter_nl;
 
-	fd_write = open(".tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd_write = open(".pipex_hd", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	input = (char *)malloc(sizeof(char));
 	*input = '\0';
 	while (input != NULL)
@@ -38,15 +72,16 @@ static int	read_heredoc(char *limiter)
 			return (free(input), -1);
 		free(input);
 	}
-	return (fd_read = open(".tmp", O_RDONLY));
-}
+	return (fd_read = open(".pipex_hd", O_RDONLY));
+} */
 
 int	heredoc_fd(char *limiter)
 {
 	int	fd;
 
+	//fd_read = open(".pipex_hd", O_RDONLY);
 	fd = read_heredoc(limiter);
-	unlink(".tmp");
+	unlink(".pipex_hd");
 	return (fd);
 }
 
