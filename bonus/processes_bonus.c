@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/03 19:50:20 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/04 20:53:48 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ static int	open_file(t_args *args, bool first_child, bool heredoc)
 	if (first_child == true)
 	{
 		if (heredoc == true)
+		{
 			fd = heredoc_fd(args[0].limiter);
+			unlink("/tmp/.heredoc_tmp");
+		}
 		else
 		{
 			if (access(args[0].infile, F_OK) == -1)
@@ -43,40 +46,56 @@ static int	open_file(t_args *args, bool first_child, bool heredoc)
 
 static void	exit_child(t_args *args, int *fd, int c)
 {
-	int	fd_io;
+	//int	fd_io;
 
-	if (access(args[c].outfile, W_OK) != -1)
+	/* if (access(args[c].outfile, W_OK) != -1)
 		fd_io = open_file(args, args[c].first_child, args[c].heredoc);
 	else if (access(args[c].outfile, F_OK) == -1)
-		fd_io = open_file(args, args[c].first_child, args[c].heredoc);
+		fd_io = open_file(args, args[c].first_child, args[c].heredoc); */
+	c = -1; //placeholder
 	close(fd[0]);
 	close(fd[1]);
 	free_struct(args);
 	exit(126);
 }
 
-static int	execute(char *pathname, char **args, char **envp, int *fd)
+static int	execute(t_args *args, int c, char **envp, int *fd)
 {
 	int	err;
 
 	err = -1;
 	close(fd[0]);
 	close(fd[1]);
-	err = execve(pathname, args, envp);
+	err = execve(args[c].pathname, args[c].args, envp);
 	if (err == -1)
 		perror(PERR_EXECVE);
 	return (err);
+}
+
+static void	is_valid_arg(t_args *args, int c, int *fd, int fd_file)
+{
+	if (args[c].args[0] == NULL || args[c].args == NULL)
+	{
+		close(fd_file);
+		ft_printf(ERR_PERMISSION, args[c].args);
+		exit_child(args, fd, c);
+	}
+	else if (access(args[c].pathname, X_OK) == -1)
+	{
+		close(fd_file);
+		ft_printf(ERR_COMMAND, args[0]);
+		exit_child(args, fd, c);
+	}
 }
 
 void	child_process(t_args *args, int c, char **envp, int *fd)
 {
 	int		fd_file;
 
-	if (args[c].args == NULL || args[c].pathname == NULL)
-		exit_child(args, fd, c);
 	if (args[c].first_child == true)
 	{
 		fd_file = open_file(args, args[c].first_child, args[c].heredoc);
+		is_valid_arg(args, c, fd, fd_file);
 		if (fd_file == -1)
 			exit_child(args, fd, c);
 		dup2(fd_file, STDIN_FILENO);
@@ -86,6 +105,7 @@ void	child_process(t_args *args, int c, char **envp, int *fd)
 	else if (args[c].last_child == true)
 	{
 		fd_file = open_file(args, args[c].first_child, args[c].heredoc);
+		is_valid_arg(args, c, fd, fd_file);
 		if (fd_file == -1)
 			exit_child(args, fd, c);
 		dup2(fd_file, STDOUT_FILENO);
@@ -93,7 +113,7 @@ void	child_process(t_args *args, int c, char **envp, int *fd)
 	}
 	else
 		dup2(fd[1], STDOUT_FILENO);
-	if (execute(args[c].pathname, args[c].args, envp, fd) == -1)
+	if (execute(args, c, envp, fd) == -1)
 		exit_child(args, fd, c);
 }
 

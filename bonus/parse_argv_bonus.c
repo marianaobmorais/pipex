@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/03 19:50:28 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/04 19:36:13 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,8 @@ static char	*get_pathname(char **args, char **envp)
 	char	**paths;
 	int		i;
 
-	if (args == NULL)
-		return (ft_printf(ERR_MALLOC, "ft_split"), NULL);
 	if (args[0] == NULL)
-		return (ft_printf(ERR_PERMISSION, args[0]), NULL);
+		return (args[0]);
 	if (access(args[0], F_OK) == 0 && access(args[0], X_OK) == 0)
 		return (ft_strdup(args[0]));
 	i = 0;
@@ -70,19 +68,29 @@ static char	*get_pathname(char **args, char **envp)
 		i++;
 	paths = NULL;
 	if (envp[i] != NULL)
+	{
 		paths = ft_split(envp[i] + 5, ':');
+		if (paths == NULL)
+			return (ft_printf(ERR_MALLOC, "ft_split in get_pathname"), NULL);
+	}
 	if (paths == NULL)
-		return (ft_printf(ERR_COMMAND, args[0]), NULL);
+		return (args[0]);
 	absolute_pathname = iterate_env_path(paths, args[0]);
 	free_vector(paths);
 	if (absolute_pathname != NULL)
 		return (absolute_pathname);
-	return (ft_printf(ERR_COMMAND, args[0]), NULL);
+	return (args[0]);
 }
 
-static void	error_malloc(void)
+static void	error_malloc(t_args *args)
 {
-	ft_printf(ERR_MALLOC, "parse_argv");
+	if (args != NULL)
+	{
+		ft_printf(ERR_MALLOC, "ft_split in parse_argv");
+		free(args);
+	}
+	else
+		ft_printf(ERR_MALLOC, "parse_argv");
 	exit(EXIT_FAILURE);
 }
 
@@ -93,7 +101,7 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 
 	args = (t_args *)malloc(sizeof(t_args) * (argc - 2));
 	if (args == NULL)
-		error_malloc();
+		error_malloc(args);
 	init_args(args, argc, is_heredoc(argv[1]));
 	count = 0;
 	while (count < argc - 3 - is_heredoc(argv[1]))
@@ -103,6 +111,8 @@ t_args	*parse_argv(int argc, char **argv, char **envp)
 		args[count].argc = argc;
 		args[count].limiter = argv[2];
 		args[count].args = ft_split(argv[count + 2 + is_heredoc(argv[1])], ' ');
+		if (args[count].args == NULL)
+			error_malloc(args);
 		args[count].pathname = get_pathname(args[count].args, envp);
 		if (count == 0)
 			args[count].first_child = true;

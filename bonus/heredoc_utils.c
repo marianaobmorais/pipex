@@ -6,13 +6,13 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 18:07:31 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/03 20:07:00 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/04 20:50:56 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex_bonus.h"
 
-static int	read_heredoc(char *limiter)
+/* static int	read_heredoc(char *limiter)
 {
 	int		fd[2];
 	pid_t	pid_hd;
@@ -43,17 +43,16 @@ static int	read_heredoc(char *limiter)
 		}
 	}
 	return (fd[0]);
-}
+} */
 
-
-/* static int	read_heredoc(char *limiter)
+int	heredoc_fd(char *limiter)
 {
 	int		fd_write;
 	int		fd_read;
 	char	*input;
 	char	*limiter_nl;
 
-	fd_write = open(".pipex_hd", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd_write = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
 	input = (char *)malloc(sizeof(char));
 	*input = '\0';
 	while (input != NULL)
@@ -72,10 +71,11 @@ static int	read_heredoc(char *limiter)
 			return (free(input), -1);
 		free(input);
 	}
-	return (fd_read = open(".pipex_hd", O_RDONLY));
-} */
+	close(fd_write);
+	return (fd_read = open("/tmp/.heredoc_tmp", O_RDONLY));
+}
 
-int	heredoc_fd(char *limiter)
+/* int	heredoc_fd(char *limiter)
 {
 	int	fd;
 
@@ -83,7 +83,7 @@ int	heredoc_fd(char *limiter)
 	fd = read_heredoc(limiter);
 	unlink(".pipex_hd");
 	return (fd);
-}
+} */
 
 bool	is_heredoc(char *argv)
 {

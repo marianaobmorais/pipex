@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/03 19:22:29 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/04 20:32:43 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <stdbool.h>
+
+#include <stdio.h> // erase
 
 # define PERR_PIPE "Error: pipe creation failed"
 # define PERR_FORK "Error: fork creation failed"
