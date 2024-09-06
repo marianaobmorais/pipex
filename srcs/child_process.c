@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/06 16:45:20 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/06 20:16:49 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,24 @@ static int	execute(t_args *args, int count, char **envp, int *fd)
 	return (err);
 }
 
-void	is_valid_arg(t_args *args, int count, int *fd)
+static void	is_valid_arg(t_args *args, int count, int *fd, int fd_file)
 {
 	if (args[count].args[0] == NULL || args[count].args == NULL)
 	{
-		ft_printf(ERR_PERMISSION, args[count].args);
+		close(fd_file);
+		if (args[count].args == NULL)
+			ft_printf(ERR_PERMISSION, NULL);
+		else
+			ft_printf(ERR_PERMISSION, args[count].args[0]);
 		exit_child(args, fd);
 	}
 	else if (access(args[count].pathname, X_OK) == -1)
 	{
-		ft_printf(ERR_COMMAND, args[0]);
+		close(fd_file);
+		if (args[count].pathname == NULL)
+			ft_printf(ERR_COMMAND, NULL);
+		else
+			ft_printf(ERR_COMMAND, args[count].pathname);
 		exit_child(args, fd);
 	}
 }
@@ -76,7 +84,7 @@ void	child_process(t_args *args, int count, char **envp, int *fd)
 	if (args[count].first_child == true)
 	{
 		fd_file = open_file(args[count].infile, true);
-		is_valid_arg(args, count, fd);
+		is_valid_arg(args, count, fd, fd_file);
 		if (fd_file == -1)
 			exit_child(args, fd);
 		dup2(fd_file, STDIN_FILENO);
@@ -86,7 +94,7 @@ void	child_process(t_args *args, int count, char **envp, int *fd)
 	else if (args[count].last_child == true)
 	{
 		fd_file = open_file(args[count].outfile, false);
-		is_valid_arg(args, count, fd);
+		is_valid_arg(args, count, fd, fd_file);
 		if (fd_file == -1)
 			exit_child(args, fd);
 		dup2(fd_file, STDOUT_FILENO);

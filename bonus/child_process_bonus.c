@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/06 17:34:27 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/06 21:04:51 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,28 @@ static void	exit_child(t_args *args, int *fd)
 	exit(126);
 }
 
+static void	is_valid_arg(t_args *args, int c, int *fd/* , int fd_file */)
+{
+	if (args[c].args[0] == NULL || args[c].args == NULL)
+	{
+		//close(fd_file);
+		if (args[c].args == NULL)
+			ft_printf(ERR_PERMISSION, ((char*)0)); //ft_printf is slow
+		else
+			ft_printf(ERR_PERMISSION, args[c].args[0]); //ft_printf is slow
+		exit_child(args, fd);
+	}
+	else if (access(args[c].pathname, X_OK) == -1)
+	{
+		//close(fd_file);
+		if (args[c].pathname == NULL)
+			ft_printf(ERR_COMMAND, ((char*)0)); //ft_printf is slow
+		else
+			ft_printf(ERR_COMMAND, args[c].pathname); //ft_printf is slow
+		exit_child(args, fd);
+	}
+}
+
 static int	execute(t_args *args, int c, char **envp, int *fd)
 {
 	int	err;
@@ -62,22 +84,6 @@ static int	execute(t_args *args, int c, char **envp, int *fd)
 	return (err);
 }
 
-static void	is_valid_arg(t_args *args, int c, int *fd, int fd_file)
-{
-	if (args[c].args[0] == NULL || args[c].args == NULL)
-	{
-		close(fd_file);
-		ft_printf(ERR_PERMISSION, args[c].args);
-		exit_child(args, fd);
-	}
-	else if (access(args[c].pathname, X_OK) == -1)
-	{
-		close(fd_file);
-		ft_printf(ERR_COMMAND, args[0]);
-		exit_child(args, fd);
-	}
-}
-
 void	child_process(t_args *args, int c, char **envp, int *fd)
 {
 	int	fd_file;
@@ -85,7 +91,7 @@ void	child_process(t_args *args, int c, char **envp, int *fd)
 	if (args[c].first_child == true)
 	{
 		fd_file = open_file(args, args[c].first_child, args[c].heredoc);
-		is_valid_arg(args, c, fd, fd_file);
+		is_valid_arg(args, c, fd/* , fd_file */);
 		if (fd_file == -1)
 			exit_child(args, fd);
 		dup2(fd_file, STDIN_FILENO);
@@ -94,14 +100,17 @@ void	child_process(t_args *args, int c, char **envp, int *fd)
 	if (args[c].last_child == true)
 	{
 		fd_file = open_file(args, args[c].first_child, args[c].heredoc);
-		is_valid_arg(args, c, fd, fd_file);
+		is_valid_arg(args, c, fd/* , fd_file */);
 		if (fd_file == -1)
 			exit_child(args, fd);
 		dup2(fd_file, STDOUT_FILENO);
 		close(fd_file);
 	}
 	else
+	{
+		is_valid_arg(args, c, fd/* , fd_file */); // fprintf should make it print in the stdout
 		dup2(fd[1], STDOUT_FILENO);
+	}
 	if (execute(args, c, envp, fd) == -1)
 		exit_child(args, fd);
 }

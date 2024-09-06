@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/04 19:36:13 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/06 20:08:51 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*get_pathname(char **args, char **envp)
 	int		i;
 
 	if (args[0] == NULL)
-		return (args[0]);
+		return (ft_strdup(args[0]));
 	if (access(args[0], F_OK) == 0 && access(args[0], X_OK) == 0)
 		return (ft_strdup(args[0]));
 	i = 0;
@@ -74,12 +74,12 @@ static char	*get_pathname(char **args, char **envp)
 			return (ft_printf(ERR_MALLOC, "ft_split in get_pathname"), NULL);
 	}
 	if (paths == NULL)
-		return (args[0]);
+		return (ft_strdup(args[0]));
 	absolute_pathname = iterate_env_path(paths, args[0]);
 	free_vector(paths);
 	if (absolute_pathname != NULL)
 		return (absolute_pathname);
-	return (args[0]);
+	return (ft_strdup(args[0]));
 }
 
 static void	error_malloc(t_args *args)
