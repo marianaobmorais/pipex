@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:48:38 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/04 20:32:43 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/06 17:48:22 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@
 # include <fcntl.h>
 # include <stdbool.h>
 
-#include <stdio.h> // erase
-
 # define PERR_PIPE "Error: pipe creation failed"
 # define PERR_FORK "Error: fork creation failed"
 # define PERR_EXECVE "Error: execve"
 # define ERR_ARGS_BONUS "Error: not enough arguments\n"
+# define ERR_ARGS_HEREDOC "Error: not enough arguments for here_doc\n"
 # define ERR_PERMISSION "Error: permission denied: %s\n"
 # define ERR_MALLOC "Error: memory allocation failed: %s\n"
 # define ERR_COMMAND "Error: command not found: %s\n"
@@ -43,6 +42,7 @@ typedef struct s_args
 	bool	heredoc;
 }	t_args;
 
+int		validate_argc(int argc, bool is_heredoc);
 t_args	*parse_argv(int argc, char **argv, char **envp);
 bool	is_heredoc(char *argv);
 int		heredoc_fd(char *limiter);

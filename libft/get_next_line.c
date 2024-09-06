@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:11:35 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/03 15:48:00 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/06 16:40:23 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ static char	*ft_update_stash(char *stash)
 	}
 	new_stash = ft_strdup(ft_strchr(stash, '\n') + 1);
 	free(stash);
+	if (new_stash[0] == '\0')
+		return (free(new_stash), NULL);
 	if (new_stash == NULL)
 		return (NULL);
 	return (new_stash);
@@ -118,35 +120,3 @@ char	*get_next_line(int fd)
 	stash[fd] = ft_update_stash(stash[fd]);
 	return (line);
 }
-
-/* #include <stdio.h>
-#include <unistd.h> // read(), write()
-#include <fcntl.h> //open()
-
-int	main(void)
-{
-	int		fd1;
-	int		fd2;
-	char	*path1 = "./file1.txt";
-	char	*path2 = "./file2.txt";
-	char	*str;
-
-	fd1 = open(path1, O_RDONLY);
-	fd2 = open(path2, O_RDONLY);
-	int		fd[] = {fd1, fd2};
-	printf("file descriptor number: %d\n", fd1);
-	printf("file descriptor number: %d\n", fd2);
-	str = "init";
-	while (str != NULL)
-	{
-		str = get_next_line(fd[0]);
-		printf ("%s", str);
-		free(str);
-		str = get_next_line(fd[1]);
-		printf ("%s", str);
-		free(str);
-	}
-	close(fd[0]);
-	close(fd[1]);
-	return (0);
-}  */

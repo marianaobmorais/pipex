@@ -6,13 +6,11 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/04 17:31:29 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/06 16:42:34 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
-
-
 
 static void	init_args(t_args *args, int argc)
 {
