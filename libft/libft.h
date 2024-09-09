@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 19:56:34 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/03 16:41:50 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:25:46 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,10 @@ char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
-void	ft_putchar_fd(char c, int fd);
-void	ft_putstr_fd(char *s, int fd);
+int		ft_putchar_fd(char c, int fd);
+int		ft_putstr_fd(char *s, int fd);
+int		ft_putnbr_fd(int n, int fd);
 void	ft_putendl_fd(char *s, int fd);
-void	ft_putnbr_fd(int n, int fd);
 
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_front(t_list **lst, t_list *new);
@@ -86,5 +86,9 @@ int		ft_putptr(unsigned long p);
 int		ft_putstr(char *s);
 int		ft_putunbr(unsigned int n);
 int		ft_putxnbr(unsigned int n, char c);
+int		ft_fprintf(int fd, const char *format, ...);
+int		ft_putunbr_fd(unsigned int n, int fd);
+int		ft_putxnbr_fd(unsigned int n, char c, int fd);
+int		ft_putptr_fd(unsigned long p, int fd);
 
 #endif

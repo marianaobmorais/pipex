@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/06 20:08:51 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:10:39 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static char	*get_pathname(char **args, char **envp)
 	{
 		paths = ft_split(envp[i] + 5, ':');
 		if (paths == NULL)
-			return (ft_printf(ERR_MALLOC, "ft_split in get_pathname"), NULL);
+			return (ft_fprintf(2, ERR_MALLOC, "get_pathname"), NULL);
 	}
 	if (paths == NULL)
 		return (ft_strdup(args[0]));
@@ -86,11 +86,11 @@ static void	error_malloc(t_args *args)
 {
 	if (args != NULL)
 	{
-		ft_printf(ERR_MALLOC, "ft_split in parse_argv");
+		ft_fprintf(2, ERR_MALLOC, "ft_split in parse_argv");
 		free(args);
 	}
 	else
-		ft_printf(ERR_MALLOC, "parse_argv");
+		ft_fprintf(2, ERR_MALLOC, "parse_argv");
 	exit(EXIT_FAILURE);
 }
 

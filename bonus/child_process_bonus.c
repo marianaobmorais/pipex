@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/06 21:04:51 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:11:23 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ static int	open_file(t_args *args, bool first_child, bool heredoc)
 		else
 		{
 			if (access(args[0].infile, F_OK) == -1)
-				return (ft_printf(ERR_FILE, args[0].infile), -1);
+				return (ft_fprintf(2, ERR_FILE, args[0].infile), -1);
 			fd = open(args[0].infile, O_RDONLY);
 			if (fd == -1)
-				return (ft_printf(ERR_PERMISSION, args[0].infile), fd);
+				return (ft_fprintf(2, ERR_PERMISSION, args[0].infile), fd);
 		}
 	}
 	else
@@ -36,7 +36,7 @@ static int	open_file(t_args *args, bool first_child, bool heredoc)
 		else
 			fd = open(args[0].outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
-			return (ft_printf(ERR_PERMISSION, args[0].outfile), fd);
+			return (ft_fprintf(2, ERR_PERMISSION, args[0].outfile), fd);
 	}
 	return (fd);
 }
@@ -55,18 +55,18 @@ static void	is_valid_arg(t_args *args, int c, int *fd/* , int fd_file */)
 	{
 		//close(fd_file);
 		if (args[c].args == NULL)
-			ft_printf(ERR_PERMISSION, ((char*)0)); //ft_printf is slow
+			ft_fprintf(2, ERR_PERMISSION, ((char*)0)); //ft_printf is slow
 		else
-			ft_printf(ERR_PERMISSION, args[c].args[0]); //ft_printf is slow
+			ft_fprintf(2, ERR_PERMISSION, args[c].args[0]); //ft_printf is slow
 		exit_child(args, fd);
 	}
 	else if (access(args[c].pathname, X_OK) == -1)
 	{
 		//close(fd_file);
 		if (args[c].pathname == NULL)
-			ft_printf(ERR_COMMAND, ((char*)0)); //ft_printf is slow
+			ft_fprintf(2, ERR_COMMAND, ((char*)0)); //ft_printf is slow
 		else
-			ft_printf(ERR_COMMAND, args[c].pathname); //ft_printf is slow
+			ft_fprintf(2, ERR_COMMAND, args[c].pathname); //ft_printf is slow
 		exit_child(args, fd);
 	}
 }
