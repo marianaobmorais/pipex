@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:44:47 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/02 19:44:55 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:22:11 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 	int		i;
 
 	if (argc != 5)
-		return (ft_printf(ERR_ARGS), 2);
+		return (ft_error(2, ERR_ARGS, NULL), 2);
 	args = parse_argv(argc, argv, envp);
 	i = 2;
 	while (i < argc - 1)

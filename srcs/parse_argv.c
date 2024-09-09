@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:37:15 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/06 20:03:19 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:23:22 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static char	*get_pathname(char **args, char **envp)
 	int		i;
 
 	if (args[0] == NULL)
-		return (ft_strdup(args[0]));
+		return (args[0]);
 	if (access(args[0], F_OK) == 0 && access(args[0], X_OK) == 0)
 		return (ft_strdup(args[0]));
 	i = 0;
@@ -69,7 +69,7 @@ static char	*get_pathname(char **args, char **envp)
 	{
 		paths = ft_split(envp[i] + 5, ':');
 		if (paths == NULL)
-			return (ft_printf(ERR_MALLOC, "ft_split in get_pathname"), NULL);
+			return (ft_error(2, ERR_MALLOC, "ft_split in get_pathname"), NULL);
 	}
 	if (paths == NULL)
 		return (ft_strdup(args[0]));
@@ -84,11 +84,11 @@ static void	error_malloc(t_args *args)
 {
 	if (args != NULL)
 	{
-		ft_printf(ERR_MALLOC, "ft_split in parse_argv");
+		ft_error(2, ERR_MALLOC, "ft_split in parse_argv");
 		free(args);
 	}
 	else
-		ft_printf(ERR_MALLOC, "parse_argv");
+		ft_error(2, ERR_MALLOC, "parse_argv");
 	exit(EXIT_FAILURE);
 }
 

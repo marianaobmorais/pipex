@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/06 20:16:49 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:32:06 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,18 @@ static int	open_file(char *file, bool first_child)
 	if (first_child == true)
 	{
 		if (access(file, F_OK) == -1)
-			return (ft_printf(ERR_FILE, file), fd);
+			return (ft_error(2, ERR_FILE, file), fd);
 		fd = open(file, O_RDONLY);
 		if (fd == -1)
-			return (ft_printf(ERR_PERMISSION, file), fd);
+			return (ft_error(2, ERR_PERMISSION, file), fd);
 	}
 	else
 	{
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
-			return (ft_printf(ERR_PERMISSION, file), fd);
+			return (ft_error(2, ERR_PERMISSION, file), fd);
 	}
 	return (fd);
-}
-
-static void	exit_child(t_args *args, int *fd)
-{
-	close(fd[0]);
-	close(fd[1]);
-	free_struct(args);
-	exit(126);
 }
 
 static int	execute(t_args *args, int count, char **envp, int *fd)
@@ -55,24 +47,22 @@ static int	execute(t_args *args, int count, char **envp, int *fd)
 	return (err);
 }
 
-static void	is_valid_arg(t_args *args, int count, int *fd, int fd_file)
+static void	is_valid_arg(t_args *args, int count, int *fd)
 {
 	if (args[count].args[0] == NULL || args[count].args == NULL)
 	{
-		close(fd_file);
 		if (args[count].args == NULL)
-			ft_printf(ERR_PERMISSION, NULL);
+			ft_error(2, ERR_PERMISSION, NULL);
 		else
-			ft_printf(ERR_PERMISSION, args[count].args[0]);
+			ft_error(2, ERR_PERMISSION, args[count].args[0]);
 		exit_child(args, fd);
 	}
 	else if (access(args[count].pathname, X_OK) == -1)
 	{
-		close(fd_file);
 		if (args[count].pathname == NULL)
-			ft_printf(ERR_COMMAND, NULL);
+			ft_error(2, ERR_COMMAND, NULL);
 		else
-			ft_printf(ERR_COMMAND, args[count].pathname);
+			ft_error(2, ERR_COMMAND, args[count].pathname);
 		exit_child(args, fd);
 	}
 }
@@ -84,7 +74,7 @@ void	child_process(t_args *args, int count, char **envp, int *fd)
 	if (args[count].first_child == true)
 	{
 		fd_file = open_file(args[count].infile, true);
-		is_valid_arg(args, count, fd, fd_file);
+		is_valid_arg(args, count, fd);
 		if (fd_file == -1)
 			exit_child(args, fd);
 		dup2(fd_file, STDIN_FILENO);
@@ -94,7 +84,7 @@ void	child_process(t_args *args, int count, char **envp, int *fd)
 	else if (args[count].last_child == true)
 	{
 		fd_file = open_file(args[count].outfile, false);
-		is_valid_arg(args, count, fd, fd_file);
+		is_valid_arg(args, count, fd);
 		if (fd_file == -1)
 			exit_child(args, fd);
 		dup2(fd_file, STDOUT_FILENO);

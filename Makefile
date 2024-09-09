@@ -6,7 +6,7 @@
 #    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/10 17:36:47 by mariaoli          #+#    #+#              #
-#    Updated: 2024/09/06 16:46:03 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/09/09 15:42:36 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,14 +23,16 @@ SRCS = $(SRCS_DIR)/main.c \
 		$(SRCS_DIR)/parse_argv.c \
 		$(SRCS_DIR)/free_functions.c \
 		$(SRCS_DIR)/child_process.c \
-		$(SRCS_DIR)/parent_process.c
+		$(SRCS_DIR)/parent_process.c \
+		$(SRCS_DIR)/error_utils.c
 
 BONUS_SRCS = $(BONUS_DIR)/main_bonus.c \
 		$(BONUS_DIR)/parse_argv_bonus.c \
 		$(BONUS_DIR)/free_functions_bonus.c \
 		$(BONUS_DIR)/parent_process_bonus.c \
 		$(BONUS_DIR)/child_process_bonus.c \
-		$(BONUS_DIR)/heredoc_utils.c
+		$(BONUS_DIR)/heredoc_utils.c \
+		$(BONUS_DIR)/error_utils_bonus.c
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
