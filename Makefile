@@ -6,7 +6,7 @@
 #    By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/10 17:36:47 by mariaoli          #+#    #+#              #
-#    Updated: 2024/09/09 15:42:36 by mariaoli         ###   ########.fr        #
+#    Updated: 2024/09/17 20:29:41 by mariaoli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,7 @@ $(LIBFT):
 clean:
 	$(MAKE) clean -C $(LIBFT)
 
-fclean:
+fclean: clean
 	$(RM) $(NAME) $(BONUS_NAME) $(LIBFT)
 	$(MAKE) fclean -C $(LIBFT_DIR)
 

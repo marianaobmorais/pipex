@@ -6,7 +6,7 @@
 /*   By: mariaoli <mariaoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:41:13 by mariaoli          #+#    #+#             */
-/*   Updated: 2024/09/09 15:45:11 by mariaoli         ###   ########.fr       */
+/*   Updated: 2024/09/12 14:44:48 by mariaoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,14 +113,3 @@ void	child_process(t_args *args, int c, char **envp, int *fd)
 	if (execute(args, c, envp, fd) == -1)
 		exit_child(args, fd);
 }
-
-// 	if (args[c].first_child == true)
-// 	{
-//	 	fd_file = open_file(args, args[c].first_child, args[c].heredoc);
-// 		is_valid_arg(args, c, fd);
-// 		if (fd_file == -1)
-// 			exit_child(args, fd);
-// 		dup2(fd_file, STDIN_FILENO);
-// 		dup2(fd[1], STDOUT_FILENO);
-// 		close(fd_file);
-// 	}
