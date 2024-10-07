@@ -53,7 +53,7 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	$(MAKE) clean -C $(LIBFT)
+	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME) $(BONUS_NAME) $(LIBFT)
