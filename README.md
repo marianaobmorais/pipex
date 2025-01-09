@@ -18,22 +18,7 @@ That should behave like:
 ```shell
 < file1 cmd1 | cmd2 > file2
 ```
-And the bonus part, accepts `multiple` pipes as well as `heredoc`:
-```shell
-./pipex file1 cmd1 cmd2 cmd3 cmd4 file2
-```
-Should behave like:
-```shell
-< file1 cmd1 | cmd2 | cmd3 | cmd4 > file2
-```
-And
-```shell
-./pipex here_doc LIMITER cmd cmd1 file
-```
-Should behave like:
-```shell
-cmd << LIMITER | cmd1 >> file
-```
+And the bonus part, accepts `multiple` pipes as well as `heredoc`.
 
 The successful execution of a command inside a program results in the end of the program. In order to execute the commands in a pipeline, I had to keep my program running until it reached the last command. To address that, I wrote a while loop that forks the main process for every command to be executed in a child process. This way the commands would only terminate the child process, and the program – which is now the parent process – will be running until the last command in the pipeline. Like this:
 ```shell
@@ -45,9 +30,9 @@ while (i < argc - 1)
 	if (pid == -1)
 		return (perror(PERR_FORK), 1);
 	if (pid == 0)
-		child_process(args, i - 2 - is_heredoc(argv[1]), envp, fd);
+		child_process(args, i - 2, envp, fd);
 	else
-		parent_process(fd, pid, is_heredoc(argv[1]));
+		parent_process(fd);
 	i++;
 }
 ```
