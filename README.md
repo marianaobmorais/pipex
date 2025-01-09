@@ -8,7 +8,7 @@
 
 ## About
 
-This project explores two shell concepts: Redirections and Pipes. In order, to make a C program that recreates the behaviour of shell pipes and rediretions, I had to learn about UNIX processes.  
+This project explores two shell concepts: Redirections and Pipes. In order to make a C program that recreates the behaviour of shell pipes and rediretions, I had to learn about UNIX processes.  
 In my code, I have a while loop that forks the main process for every command to be executed in a child process. This way, the program, as the parent process, keeps running and doesn't end at the first command execution.
 
 The mandatory part consists of a simple program that takes 4 arguments:
