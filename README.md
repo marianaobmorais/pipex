@@ -8,7 +8,14 @@
 
 ## About
 
-This project explores two shell concepts: Redirections and Pipes. In order to make a C program that recreates the behaviour of shell pipes and rediretions, I had to learn about UNIX processes.  
+This project explores two shell concepts: Redirections and Pipes. In order to make a C program that recreates the behaviour of shell pipes and rediretions, I had to:
+- learn to use the `pipe()` system call to create unidirectional communication channels between processes, enabling the output of one process to serve as the input for another; 
+- use `fork()` to create child processes that inherit file descriptors from the parent, allowing for concurrent execution of commands, mirroring the behavior of shell pipelines;
+- understand the `dup2()` function to duplicate file descriptors, enabling redirection of standard input and output;
+- implement `execve()` to execute external commands. This function is integral to running shell commands within a program; and
+- handle errors, manage memory, and ensure compliance with coding standards.
+
+## Features
 
 The mandatory part consists of a simple program that takes 4 arguments:
 ```shell
@@ -43,7 +50,7 @@ Clone the repository:
 ```shell
 git clone https://github.com/marianaobmorais/pipex.git
 ```
-Enter the clonned directory:
+Enter the cloned directory:
 ```shell
 cd pipex
 ```
